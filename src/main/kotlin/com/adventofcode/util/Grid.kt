@@ -14,7 +14,11 @@ class Grid<T>(rows: Int, cols: Int) {
     }
     
     fun <T> getOrDefault(i: Complex, default: T): T {
-        val tmp = grid[i.getReal().toInt()][i.getImaginary().toInt()] as T?
-        return tmp ?: default
+        try {
+            val tmp = grid[i.getReal().toInt()][i.getImaginary().toInt()] as T?
+            return tmp ?: default
+        } catch (e: IndexOutOfBoundsException) {
+            return default
+        }
     }
 }
