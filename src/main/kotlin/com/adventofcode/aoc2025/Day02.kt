@@ -5,15 +5,40 @@ import com.adventofcode.util.File
 import java.util.concurrent.TimeUnit
 
 @State(Scope.Thread)
-open class State02() : File("src/main/resources/input/2025/02.txt")
+open class State02(fileName: String = "src/main/resources/input/2025/02.txt") : File(fileName)
 
 open class Day02 {
+    fun part1(state: File): Long {
+        return part1(state as State02)
+    }
+
+    fun part2(state: File): Long {
+        return part2(state as State02)
+    }
+
+    @Benchmark
+    @BenchmarkMode(Mode.SampleTime)
+    @OutputTimeUnit(TimeUnit.MILLISECONDS)
+    fun part1(state: State02): Long {
+        var sum = 0L;
+        for (range in state[0].split(",")) {
+            var start = range.split("-")[0].toLong()
+            var end = range.split("-")[1].toLong() + 1
+            for (i in start..<end) {
+                if (verifyCode(i.toString())) {
+                    sum += i
+                }
+            }
+        }
+        return sum
+    }
+
     @Benchmark
     @BenchmarkMode(Mode.SampleTime)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     fun part2(state: State02): Long {
         var sum = 0L;
-        for (range in state.lines[0].split(",")) {
+        for (range in state[0].split(",")) {
             var start = range.split("-")[0].toLong()
             var end = range.split("-")[1].toLong() + 1
             for (i in start..<end) {
@@ -23,6 +48,21 @@ open class Day02 {
             }
         }
         return sum
+    }
+
+    fun verifyCode(s: String): Boolean {
+        if (s.length % 2 != 0) {
+            return false
+        }
+
+        val substrLength = s.length / 2
+        for (i in 0..<substrLength) {
+            if (s[i] != s[i+substrLength]) {
+                return false
+            }
+        }
+
+        return true
     }
 
     fun verifyCodeFull(s: String): Boolean {
