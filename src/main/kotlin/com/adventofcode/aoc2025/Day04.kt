@@ -1,16 +1,16 @@
 package com.adventofcode.aoc2025
 
 import org.openjdk.jmh.annotations.*
-import com.adventofcode.util.*
 import java.util.concurrent.TimeUnit
 import org.apache.commons.math3.complex.Complex
+import com.adventofcode.util.*
 
 @State(Scope.Thread)
 open class State04(fileName: String = "src/main/resources/input/2025/04.txt") : File(fileName) {
     var grid: Grid<Boolean>
 
     init {
-        this.grid = Grid<Boolean>(this.size, this[0].length)
+        this.grid = Grid<Boolean>(this.size, this[0].length, false)
         for (r in 0..<this.size) {
             for (c in 0..<this[0].length) {
                 grid[r, c] = this[r][c] == '@'
@@ -49,7 +49,7 @@ open class Day04 {
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     fun part2(state: State04): Long {
         var res = 0L
-        var curr = 0L
+        var curr: Long
         do {
             curr = 0L
             var toRemove = ArrayList<Complex>()
@@ -81,7 +81,7 @@ open class Day04 {
 
         var adj = 0
         for (offset: Complex in ADJACENCIES) {
-            if (grid.getOrDefault(offset.add(p), false)) {
+            if (grid.getOrDefault(offset + p, false)) {
                 adj++
             }
         }

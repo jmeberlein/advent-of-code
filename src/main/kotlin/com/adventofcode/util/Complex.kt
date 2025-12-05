@@ -1,3 +1,5 @@
+package com.adventofcode.util
+
 import org.apache.commons.math3.complex.Complex
 
 operator fun Complex.plus(b: Complex): Complex {
