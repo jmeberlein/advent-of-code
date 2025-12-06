@@ -65,28 +65,18 @@ open class Day05 {
     }
 
     fun mergeRanges(ranges: MutableList<ClosedRange<Long>>): MutableList<ClosedRange<Long>> {
-        ranges.sortWith ( 
-            compareBy<ClosedRange<Long>> { it.start }.thenBy { it.endInclusive }
-        )
-        var curr = ranges
-        var prev: MutableList<ClosedRange<Long>>
-        do {
-            prev = curr
-            curr = ArrayList<ClosedRange<Long>>()
-            var i = 0
-            while (i < prev.size) {
-                if (i < prev.size - 1 && prev[i+1].contains(prev[i].endInclusive)) {
-                    curr.add(prev[i].start..prev[i+1].endInclusive)
-                    i += 2
-                } else if (i < prev.size - 1 && prev[i].contains(prev[i+1].endInclusive)) {
-                    curr.add(prev[i])
-                    i += 2
-                } else {
-                    curr.add(prev[i])
-                    i++
-                }
+        ranges.sortWith(compareBy<ClosedRange<Long>> { it.start })
+        var i = 0
+        while (i < ranges.size) {
+            if (i < ranges.size - 1 && ranges[i+1].contains(ranges[i].endInclusive)) {
+                ranges.set(i, ranges[i].start..ranges[i+1].endInclusive)
+                ranges.remove(ranges[i+1])
+            } else if (i < ranges.size - 1 && ranges[i].contains(ranges[i+1].endInclusive)) {
+                ranges.remove(ranges[i+1])
+            } else {
+                i++
             }
-        } while (prev != curr)
-        return prev
+        }
+        return ranges
     }
 }

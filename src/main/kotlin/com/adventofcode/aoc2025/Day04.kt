@@ -10,12 +10,7 @@ open class State04(fileName: String = "src/main/resources/input/2025/04.txt") : 
     var grid: Grid<Boolean>
 
     init {
-        this.grid = Grid<Boolean>(this.size, this[0].length, false)
-        for (r in 0..<this.size) {
-            for (c in 0..<this[0].length) {
-                grid[r, c] = this[r][c] == '@'
-            }
-        }
+        this.grid = Grid<Boolean>(this.size, this[0].length) { r, c -> this[r][c] == '@' }
     }
 }
 
@@ -35,7 +30,7 @@ open class Day04 {
         var res = 0L
         for (r in 0..<state.grid.rows) {
             for (c in 0..<state.grid.cols) {
-                val p = Complex(r.toDouble(), c.toDouble())
+                val p = Vector.of(r.toDouble(), c.toDouble())
                 if (state.grid[p] && countAdjacencies(state.grid, p) < 4) {
                     res++
                 }
@@ -52,10 +47,10 @@ open class Day04 {
         var curr: Long
         do {
             curr = 0L
-            var toRemove = ArrayList<Complex>()
+            var toRemove = ArrayList<Vector>()
             for (r in 0..<state.grid.rows) {
                 for (c in 0..<state.grid.cols) {
-                    val p = Complex(r.toDouble(), c.toDouble())
+                    val p = Vector.of(r.toDouble(), c.toDouble())
                     if (state.grid[p] && countAdjacencies(state.grid, p) < 4) {
                         toRemove.add(p)
                         curr++
@@ -72,15 +67,15 @@ open class Day04 {
         return res
     }
 
-    fun countAdjacencies(grid: Grid<Boolean>, p: Complex): Int {
-        val ADJACENCIES: Array<Complex> = arrayOf(
-            Complex(-1.0, -1.0), Complex(-1.0,  0.0), Complex(-1.0,  1.0),
-            Complex( 0.0, -1.0),                      Complex( 0.0,  1.0),
-            Complex( 1.0, -1.0), Complex( 1.0,  0.0), Complex( 1.0,  1.0)
+    fun countAdjacencies(grid: Grid<Boolean>, p: Vector): Int {
+        val ADJACENCIES: Array<Vector> = arrayOf(
+            Vector.of(-1.0, -1.0), Vector.of(-1.0,  0.0), Vector.of(-1.0,  1.0),
+            Vector.of( 0.0, -1.0),                        Vector.of( 0.0,  1.0),
+            Vector.of( 1.0, -1.0), Vector.of( 1.0,  0.0), Vector.of( 1.0,  1.0)
         )
 
         var adj = 0
-        for (offset: Complex in ADJACENCIES) {
+        for (offset: Vector in ADJACENCIES) {
             if (grid.getOrDefault(offset + p, false)) {
                 adj++
             }
