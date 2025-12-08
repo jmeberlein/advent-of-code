@@ -2,6 +2,9 @@ package com.adventofcode.util
 
 import kotlin.math.acos
 import kotlin.math.sqrt
+import kotlin.math.pow
+import kotlin.math.abs
+import kotlin.math.abs
 
 class Vector(val size: Int, init: (Int) -> Double) {
     companion object {
@@ -95,8 +98,14 @@ class Vector(val size: Int, init: (Int) -> Double) {
         )
     }
 
-    fun magnitude(): Double {
-        return sqrt((0..<this.size).map { i -> this[i] * this[i] }.sum())
+    fun magnitude(norm: Double = 2.0): Double {
+        if (norm <= 0) {
+            throw IllegalArgumentException("Norm must be positive")
+        } else if (norm == Double.POSITIVE_INFINITY) {
+            return (0..<this.size).maxOf { i -> abs(this[i]) }
+        } else {
+            return (0..<this.size).map { i -> abs(this[i]).pow(norm) }.sum().pow(1.0 / norm)
+        }
     }
 
     fun angleBetween(v: Vector): Double {
