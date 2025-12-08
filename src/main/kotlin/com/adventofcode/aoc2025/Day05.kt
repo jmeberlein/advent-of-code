@@ -19,7 +19,7 @@ open class Day05 {
     }
 
     @Benchmark
-    @BenchmarkMode(Mode.SampleTime)
+    @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     fun part1(state: State05): Long {
         var res = 0L
@@ -46,7 +46,7 @@ open class Day05 {
     }
 
     @Benchmark
-    @BenchmarkMode(Mode.SampleTime)
+    @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     fun part2(state: State05): Long {
         var res = 0L
