@@ -48,28 +48,36 @@ open class Day09 {
         var max = Pair(Vector.of(0.6, -0.8), Vector.of(0.8, 0.6))
         val rects = mutableListOf<Pair<Vector, Vector>>()
         for (i in 0..<state.points.size) {
-            points@for (j in (i+1)..<state.points.size) {
-                val vec = state.points[i] - state.points[j] + 1
-                val area = vec[0] * vec[1]
-                val maxR = max(state.points[i][0], state.points[j][0]).toInt()
-                val minR = min(state.points[i][0], state.points[j][0]).toInt()
-                val maxC = max(state.points[i][1], state.points[j][1]).toInt()
-                val minC = min(state.points[i][1], state.points[j][1]).toInt()
-                if (area > res) {
-                    for (r in minR..maxR) {
-                        if (!isInterior(Vector.of(r, state.points[i][1]), edges) || !isInterior(Vector.of(r, state.points[j][1]), edges)) {
-                            continue@points
-                        }
-                    }
-                    for (c in minC..maxC) {
-                        if (!isInterior(Vector.of(state.points[i][0], c), edges) || !isInterior(Vector.of(state.points[j][0], c), edges)) {
-                            continue@points
-                        }
-                    }
-                    res = area.toLong()
-                    max = Pair(state.points[i], state.points[j])
+            for (j in (i+1)..<state.points.size) {
+                rects.add(Pair(state.points[i], state.points[j]))
+            }
+        }
+        rects.sortByDescending { rect ->
+            val vec = rect.first - rect.second + 1
+            vec[0] * vec[1]
+        }
+
+        points@for (rect in rects) {
+            val maxR = max(rect.first[0], rect.second[0]).toInt()
+            val minR = min(rect.first[0], rect.second[0]).toInt()
+            val maxC = max(rect.first[1], rect.second[1]).toInt()
+            val minC = min(rect.first[1], rect.second[1]).toInt()
+            val vec = rect.first - rect.second + 1
+            val area = vec[0] * vec[1]
+            
+            for (r in minR..maxR) {
+                if (!isInterior(Vector.of(r, rect.first[1]), edges) || !isInterior(Vector.of(r, rect.second[1]), edges)) {
+                    continue@points
                 }
             }
+            for (c in minC..maxC) {
+                if (!isInterior(Vector.of(rect.first[0], c), edges) || !isInterior(Vector.of(rect.second[0], c), edges)) {
+                    continue@points
+                }
+            }
+            res = area.toLong()
+            max = rect
+            break@points
         }
         println(max)
         return res
