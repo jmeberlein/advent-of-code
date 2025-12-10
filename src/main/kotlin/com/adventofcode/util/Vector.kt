@@ -74,6 +74,13 @@ class Vector(val size: Int, init: (Int) -> Double) {
         return Vector(this.size) { i -> this[i] % x.toDouble() }
     }
 
+    override fun equals(other: Any?): Boolean {
+        when (other) {
+            is Vector -> return (0..<size).all { i -> this[i] == other[i] }
+            else -> return false
+        }
+    }
+
     fun dotProduct(v: Vector): Double {
         return this.innerProduct(v)
     }
