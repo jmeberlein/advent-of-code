@@ -2,10 +2,9 @@ package com.adventofcode.aoc2025
 
 import org.openjdk.jmh.annotations.*
 import com.adventofcode.util.File
-import com.adventofcode.util.Grid
-import com.adventofcode.util.Matrix
 import com.adventofcode.util.Vector
 import java.util.concurrent.TimeUnit
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.abs
 
@@ -46,10 +45,20 @@ open class Day09 {
         for (i in 0..<state.points.size) {
             for (j in (i+1)..<state.points.size) {
                 val vec = state.points[i] - state.points[j] + 1
-                val c1 = Vector.of(state.points[i][0], state.points[j][1])
-                val c2 = Vector.of(state.points[j][0], state.points[i][1])
+                val p1 = Vector.of(state.points[i][0], state.points[j][1])
+                val p2 = Vector.of(state.points[j][0], state.points[i][1])
+                val maxR = max(p1[0], p2[0]) - 0.5
+                val minR = min(p1[0], p2[0]) + 0.5
+                val maxC = max(p1[1], p2[1]) - 0.5
+                val minC = min(p1[1], p2[1]) + 0.5
+                val c1 = Vector.of(maxR, maxC)
+                val c2 = Vector.of(maxR, minC)
+                val c3 = Vector.of(minR, minC)
+                val c4 = Vector.of(minR, maxC)
                 // println("${state.points[i]} and ${state.points[j]} have area ${vec[0] * vec[1]}")
-                if (isInterior(c1, edges) && isInterior(c2, edges) && abs(vec[0] * vec[1]) > res) {
+                if (isInterior(p1, edges) && isInterior(p2, edges) && isInterior(c1, c2, edges) &&
+                        isInterior(c2, c3, edges) && isInterior(c3, c4, edges) &&
+                        isInterior(c4, c1, edges) && abs(vec[0] * vec[1]) > res) {
                     res = abs(vec[0] * vec[1]).toLong()
                     max = Pair(state.points[i], state.points[j])
                 }
@@ -59,26 +68,47 @@ open class Day09 {
         return res
     }
 
-    fun isInterior(v: Vector, edges: List<Pair<Vector, Vector>>): Boolean {
-        var counter = 0.0
+    fun isInterior(v1: Vector, v2: Vector, edges: List<Pair<Vector, Vector>>): Boolean {
         for (edge in edges) {
-            if (edge.first[1] != edge.second[1] && edge.first[0] > v[0]) {
-                // println("$v crosses $edge")
-                if (edge.first[1] < edge.second[1]) {
-                    if (v[1] == edge.first[1] || v[1] == edge.second[1]) {
-                        counter -= 0.5
-                    } else if (edge.first[1] < v[1] && v[1] < edge.second[1]) {
-                        counter -= 1
-                    }
-                } else if (edge.first[1] > edge.second[1]) {
-                    if (v[1] == edge.first[1] || v[1] == edge.second[1]) {
-                        counter += 0.5
-                    } else if (edge.first[1] > v[1] && v[1] > edge.second[1]) {
-                        counter += 1
-                    }
+            if (v1[0] == v2[0]) {
+                if (((edge.first[0] < v1[0] && v1[0] < edge.second[0]) || (edge.first[0] > v1[0] && v1[0] > edge.second[0])) &&
+                        ((v1[1] < edge.first[1] && edge.first[1] < v2[1]) || (v1[1] > edge.first[1] && edge.first[1] > v2[1]))) {
+                    return false
+                }
+            } else {
+                if (((edge.first[1] < v1[1] && v1[1] < edge.second[1]) || (edge.first[1] > v1[1] && v1[1] > edge.second[1])) &&
+                        ((v1[0] < edge.first[0] && edge.first[0] < v2[0]) || (v1[0] > edge.first[0] && edge.first[0] > v2[0]))) {
+                    return false
                 }
             }
         }
-        return counter != 0.0
+        return true
+    }
+
+    fun isInterior(v: Vector, edges: List<Pair<Vector, Vector>>): Boolean {
+        var count = 0.0
+        for (edge in edges) {
+            if (edge.first[0] == v[0] && v[0] == edge.second[0] && ((edge.first[1] <= v[1] && v[1] <= edge.second[1]) || (edge.first[1] >= v[1] && v[1] >= edge.second[1]))) {
+                // println("$v is on $edge")
+                return true
+            }
+
+            if (edge.first[1] == v[1] && v[1] == edge.second[1] && ((edge.first[0] <= v[0] && v[0] <= edge.second[0]) || (edge.first[0] >= v[0] && v[0] >= edge.second[0]))) {
+                // println("$v is on $edge")
+                return true
+            }
+
+            if (edge.first[0] == edge.second[0] && v[0] > edge.second[0] && ((edge.first[1] < v[1] && v[1] < edge.second[1]) || (edge.first[1] > v[1] && v[1] > edge.second[1]))) {
+                // println("$v interects $edge")
+                count++
+            }
+
+            if (edge.first[0] == edge.second[0] && v[0] > edge.second[0] && (edge.first[1] == v[1] || v[1] == edge.second[1])) {
+                // println("$v touches $edge")
+                count += 0.5
+            }
+        }
+
+        return count % 2 != 0.0
     }
 }
