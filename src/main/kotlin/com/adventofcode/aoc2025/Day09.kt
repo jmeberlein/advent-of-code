@@ -2,13 +2,38 @@ package com.adventofcode.aoc2025
 
 import org.openjdk.jmh.annotations.*
 import com.adventofcode.util.File
-import com.adventofcode.util.Grid
-import com.adventofcode.util.Matrix
 import com.adventofcode.util.Vector
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.abs
+
+fun IntRange.size():Int = last - first + 1
+fun IntRange.overlaps(other: IntRange): Boolean =
+    max(first, other.first) <= min(last, other.last)
+
+class Rectangle(val r: IntRange, val c: IntRange) {
+    val area: Long =
+        r.size().toLong() * c.size()
+
+    fun overlaps(other: Rectangle): Boolean =
+        r.overlaps(other.r) && c.overlaps(other.c)
+
+    fun inner(): Rectangle =
+        Rectangle(
+            r.first + 1..<r.last,
+            c.first + 1..<c.last
+        )
+
+    companion object {
+        fun of(a: Vector, b: Vector): Rectangle =
+            Rectangle(
+                min(a[0], b[0]).toInt()..max(a[0], b[0]).toInt(),
+                min(a[1], b[1]).toInt()..max(a[1], b[1]).toInt(),
+            )
+    }
+}
+
 
 @State(Scope.Thread)
 open class State09(fileName: String = "src/main/resources/input/2025/09.txt") : File(fileName) {
@@ -40,77 +65,20 @@ open class Day09 {
     @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     fun part2(state: State09): Long {
-        var res = 0L
-        val edges: List<Pair<Vector, Vector>> = List(state.points.size) { i -> Pair(state.points[i], state.points[(i+1)%state.points.size]) }
-        // println(isInterior(Vector.of(9.0, 4.0), edges))
-        // println(isInterior(Vector.of(9.0, 3.0), edges))
-        // println(isInterior(Vector.of(2.0, 7.0), edges))
-        var max = Pair(Vector.of(0.6, -0.8), Vector.of(0.8, 0.6))
-        val rects = mutableListOf<Pair<Vector, Vector>>()
-        for (i in 0..<state.points.size) {
-            for (j in (i+1)..<state.points.size) {
-                rects.add(Pair(state.points[i], state.points[j]))
+        val rectangles: List<Rectangle> = state.points.flatMapIndexed { index, left ->
+            state.points.drop(index + 1).map { right ->
+                Rectangle.of(left, right)
             }
+        }.sortedByDescending { it.area }
+
+        val lines: List<Rectangle> = (state.points + state.points.first())
+            .zipWithNext()
+            .map { (left, right) -> Rectangle.of(left, right) }
+
+        val max = rectangles.first { rectangle ->
+            val inner = rectangle.inner()
+            lines.none { line -> line.overlaps(inner) }
         }
-        rects.sortByDescending { rect ->
-            val vec = rect.first - rect.second + 1
-            vec[0] * vec[1]
-        }
-
-        points@for (rect in rects) {
-            val maxR = max(rect.first[0], rect.second[0]).toInt()
-            val minR = min(rect.first[0], rect.second[0]).toInt()
-            val maxC = max(rect.first[1], rect.second[1]).toInt()
-            val minC = min(rect.first[1], rect.second[1]).toInt()
-            val vec = rect.first - rect.second + 1
-            val area = vec[0] * vec[1]
-            
-            for (r in minR..maxR) {
-                if (!isInterior(Vector.of(r, rect.first[1]), edges) || !isInterior(Vector.of(r, rect.second[1]), edges)) {
-                    continue@points
-                }
-            }
-            for (c in minC..maxC) {
-                if (!isInterior(Vector.of(rect.first[0], c), edges) || !isInterior(Vector.of(rect.second[0], c), edges)) {
-                    continue@points
-                }
-            }
-            res = area.toLong()
-            max = rect
-            break@points
-        }
-        println(max)
-        return res
-    }
-
-    fun isInterior(v: Vector, edges: List<Pair<Vector, Vector>>): Boolean {
-        var count = 0.0
-        for (edge in edges) {
-            if (edge.first[0] == v[0] && v[0] == edge.second[0] && ((edge.first[1] <= v[1] && v[1] <= edge.second[1]) || (edge.first[1] >= v[1] && v[1] >= edge.second[1]))) {
-                // println("$v is on $edge")
-                return true
-            }
-
-            if (edge.first[1] == v[1] && v[1] == edge.second[1] && ((edge.first[0] <= v[0] && v[0] <= edge.second[0]) || (edge.first[0] >= v[0] && v[0] >= edge.second[0]))) {
-                // println("$v is on $edge")
-                return true
-            }
-
-            // if ((edge.first[0] == v[0] && v[0] == edge.second[0]) || (edge.first[1] == v[1] && v[1] == edge.second[1])) {
-            //     return true
-            // }
-
-            if (edge.first[0] == edge.second[0] && v[0] > edge.second[0] && ((edge.first[1] < v[1] && v[1] < edge.second[1]) || (edge.first[1] > v[1] && v[1] > edge.second[1]))) {
-                // println("$v interects $edge")
-                count++
-            }
-
-            if (edge.first[0] == edge.second[0] && v[0] > edge.second[0] && (edge.first[1] == v[1] || v[1] == edge.second[1])) {
-                // println("$v touches $edge")
-                count += 0.5
-            }
-        }
-
-        return count % 2 != 0.0
+        return max.area
     }
 }
