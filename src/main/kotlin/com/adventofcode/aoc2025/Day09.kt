@@ -8,33 +8,6 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.abs
 
-fun IntRange.size():Int = last - first + 1
-fun IntRange.overlaps(other: IntRange): Boolean =
-    max(first, other.first) <= min(last, other.last)
-
-class Rectangle(val r: IntRange, val c: IntRange) {
-    val area: Long =
-        r.size().toLong() * c.size()
-
-    fun overlaps(other: Rectangle): Boolean =
-        r.overlaps(other.r) && c.overlaps(other.c)
-
-    fun inner(): Rectangle =
-        Rectangle(
-            r.first + 1..<r.last,
-            c.first + 1..<c.last
-        )
-
-    companion object {
-        fun of(a: Vector, b: Vector): Rectangle =
-            Rectangle(
-                min(a[0], b[0]).toInt()..max(a[0], b[0]).toInt(),
-                min(a[1], b[1]).toInt()..max(a[1], b[1]).toInt(),
-            )
-    }
-}
-
-
 @State(Scope.Thread)
 open class State09(fileName: String = "src/main/resources/input/2025/09.txt") : File(fileName) {
     val points = List<Vector>(this.size) { i ->
@@ -90,16 +63,53 @@ open class Day09 {
                     max = Pair(state.points[i], state.points[j])
                 }
             }
-        }.sortedByDescending { it.area }
-
-        val lines: List<Rectangle> = (state.points + state.points.first())
-            .zipWithNext()
-            .map { (left, right) -> Rectangle.of(left, right) }
-
-        val max = rectangles.first { rectangle ->
-            val inner = rectangle.inner()
-            lines.none { line -> line.overlaps(inner) }
         }
-        return max.area
+        return res
+    }
+
+
+    fun isInterior(v1: Vector, v2: Vector, edges: List<Pair<Vector, Vector>>): Boolean {
+        for (edge in edges) {
+            if (v1[0] == v2[0]) {
+                if (((edge.first[0] < v1[0] && v1[0] < edge.second[0]) || (edge.first[0] > v1[0] && v1[0] > edge.second[0])) &&
+                        ((v1[1] < edge.first[1] && edge.first[1] < v2[1]) || (v1[1] > edge.first[1] && edge.first[1] > v2[1]))) {
+                    return false
+                }
+            } else {
+                if (((edge.first[1] < v1[1] && v1[1] < edge.second[1]) || (edge.first[1] > v1[1] && v1[1] > edge.second[1])) &&
+                        ((v1[0] < edge.first[0] && edge.first[0] < v2[0]) || (v1[0] > edge.first[0] && edge.first[0] > v2[0]))) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+
+    fun isInterior(v: Vector, edges: List<Pair<Vector, Vector>>): Boolean {
+        var count = 0.0
+        for (edge in edges) {
+            if (edge.first[0] == v[0] && v[0] == edge.second[0] && ((edge.first[1] <= v[1] && v[1] <= edge.second[1]) || (edge.first[1] >= v[1] && v[1] >= edge.second[1]))) {
+                // println("$v is on $edge")
+                return true
+            }
+
+            if (edge.first[1] == v[1] && v[1] == edge.second[1] && ((edge.first[0] <= v[0] && v[0] <= edge.second[0]) || (edge.first[0] >= v[0] && v[0] >= edge.second[0]))) {
+                // println("$v is on $edge")
+                return true
+            }
+
+            if (edge.first[0] == edge.second[0] && v[0] > edge.second[0] && ((edge.first[1] < v[1] && v[1] < edge.second[1]) || (edge.first[1] > v[1] && v[1] > edge.second[1]))) {
+                // println("$v interects $edge")
+                count++
+            }
+
+            if (edge.first[0] == edge.second[0] && v[0] > edge.second[0] && (edge.first[1] == v[1] || v[1] == edge.second[1])) {
+                // println("$v touches $edge")
+                count += 0.5
+            }
+        }
+
+        return count % 2 != 0.0
     }
 }
