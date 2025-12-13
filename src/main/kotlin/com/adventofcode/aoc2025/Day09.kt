@@ -65,9 +65,30 @@ open class Day09 {
     @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     fun part2(state: State09): Long {
-        val rectangles: List<Rectangle> = state.points.flatMapIndexed { index, left ->
-            state.points.drop(index + 1).map { right ->
-                Rectangle.of(left, right)
+        var res = 0L
+        val edges: List<Pair<Vector, Vector>> = List(state.points.size) { i -> Pair(state.points[i], state.points[(i+1)%state.points.size]) }
+        // println(isInterior(Vector.of(9.0, 4.0), edges))
+        var max = Pair(Vector.of(0.6, -0.8), Vector.of(0.8, 0.6))
+        for (i in 0..<state.points.size) {
+            for (j in (i+1)..<state.points.size) {
+                val vec = Vector(2) { k -> abs(state.points[i][k] - state.points[j][k]) + 1 }
+                val p1 = Vector.of(state.points[i][0], state.points[j][1])
+                val p2 = Vector.of(state.points[j][0], state.points[i][1])
+                val maxR = max(p1[0], p2[0]) - 0.5
+                val minR = min(p1[0], p2[0]) + 0.5
+                val maxC = max(p1[1], p2[1]) - 0.5
+                val minC = min(p1[1], p2[1]) + 0.5
+                val c1 = Vector.of(maxR, maxC)
+                val c2 = Vector.of(maxR, minC)
+                val c3 = Vector.of(minR, minC)
+                val c4 = Vector.of(minR, maxC)
+                // println("${state.points[i]} and ${state.points[j]} have area ${vec[0] * vec[1]}")
+                if (isInterior(p1, edges) && isInterior(p2, edges) && isInterior(c1, c2, edges) &&
+                        isInterior(c2, c3, edges) && isInterior(c3, c4, edges) &&
+                        isInterior(c4, c1, edges) && abs(vec[0] * vec[1]) > res) {
+                    res = abs(vec[0] * vec[1]).toLong()
+                    max = Pair(state.points[i], state.points[j])
+                }
             }
         }.sortedByDescending { it.area }
 
