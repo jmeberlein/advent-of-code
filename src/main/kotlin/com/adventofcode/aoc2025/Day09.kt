@@ -44,7 +44,7 @@ open class Day09 {
         var max = Pair(Vector.of(0.6, -0.8), Vector.of(0.8, 0.6))
         for (i in 0..<state.points.size) {
             for (j in (i+1)..<state.points.size) {
-                val vec = state.points[i] - state.points[j] + 1
+                val vec = Vector(2) { k -> abs(state.points[i][k] - state.points[j][k]) + 1 }
                 val p1 = Vector.of(state.points[i][0], state.points[j][1])
                 val p2 = Vector.of(state.points[j][0], state.points[i][1])
                 val maxR = max(p1[0], p2[0]) - 0.5
