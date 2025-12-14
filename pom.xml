@@ -207,7 +207,14 @@ THE POSSIBILITY OF SUCH DAMAGE.
                     </execution>
                 </executions>
             </plugin>
-
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.2.0</version> <!-- Use the latest version -->
+            <configuration>
+                <mainClass>com.adventofcode.MainKt</mainClass> <!-- Specify your main class -->
+            </configuration>
+        </plugin>
         </plugins>
     </build>
 
