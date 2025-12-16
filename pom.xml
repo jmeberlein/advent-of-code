@@ -70,13 +70,19 @@ THE POSSIBILITY OF SUCH DAMAGE.
             <artifactId>kotlin-reflect</artifactId>
             <version>1.9.20</version>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-serialization-json</artifactId>
+            <version>1.9.0</version>
+            <type>pom</type>
+        </dependency>
     </dependencies>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jmh.version>1.37</jmh.version>
         <javac.target>1.8</javac.target>
-        <kotlin.version>1.9.20</kotlin.version>
+        <kotlin.version>2.2.0</kotlin.version>
         <jmh.generator>default</jmh.generator>
         <uberjar.name>benchmarks</uberjar.name>
     </properties>
