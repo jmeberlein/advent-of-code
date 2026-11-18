@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.min
 
 @State(Scope.Thread)
-open class State08(fileName: String = "src/main/resources/input/2025/08.txt") : File(fileName) {
+open class State08(fileName: String = "src/main/resources/input/aoc2025/08.txt") : File(fileName) {
     val points = List<Vector>(this.size) { i ->
         val tok = this[i].split(",")
         Vector.of(tok[0].toDouble(), tok[1].toDouble(), tok[2].toDouble())

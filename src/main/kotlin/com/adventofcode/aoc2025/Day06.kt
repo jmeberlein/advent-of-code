@@ -6,7 +6,7 @@ import com.adventofcode.util.Grid
 import java.util.concurrent.TimeUnit
 
 @State(Scope.Thread)
-open class State06(fileName: String = "src/main/resources/input/2025/06.txt") : File(fileName)
+open class State06(fileName: String = "src/main/resources/input/aoc2025/06.txt") : File(fileName)
 
 open class Day06 {
     @Benchmark
@@ -51,7 +51,7 @@ open class Day06 {
     fun part2(state: State06): Long {
         var res = 0L
         val nums = (0..<state[0].length).map { c ->
-            CharArray(state.size-1) { r -> state[r][c] }.concatToString().strip()
+            CharArray(state.size-1) { r -> state[r][c] }.concatToString().trim()
         }
         val ops = state[state.size - 1].trim().split("\\s+".toRegex())
         var op = 0

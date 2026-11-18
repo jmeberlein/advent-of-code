@@ -12,7 +12,7 @@ import kotlin.math.abs
 class Node(val depth: Int, val count: IntVector, val state: IntVector) {}
 
 @State(Scope.Thread)
-open class State10(fileName: String = "src/main/resources/input/2025/10.txt") : File(fileName) {}
+open class State10(fileName: String = "src/main/resources/input/aoc2025/10.txt") : File(fileName) {}
 
 open class Day10 {
     @Benchmark

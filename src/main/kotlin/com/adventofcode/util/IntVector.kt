@@ -8,6 +8,11 @@ import kotlin.math.abs
 
 class IntVector(val size: Int, init: (Int) -> Int) {
     companion object {
+        val LEFT = IntVector.of(0, -1)
+        val RIGHT = IntVector.of(0, 1)
+        val UP = IntVector.of(-1, 0)
+        val DOWN = IntVector.of(1, 0)
+        
         fun of(vararg arr: Int): IntVector {
             return IntVector(arr.size) { i -> arr[i].toInt() }
         }

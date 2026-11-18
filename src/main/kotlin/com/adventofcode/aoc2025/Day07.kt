@@ -6,7 +6,7 @@ import com.adventofcode.util.Grid
 import java.util.concurrent.TimeUnit
 
 @State(Scope.Thread)
-open class State07(fileName: String = "src/main/resources/input/2025/07.txt") : File(fileName) {
+open class State07(fileName: String = "src/main/resources/input/aoc2025/07.txt") : File(fileName) {
     val grid = Grid<Char>(this.size, this[0].length) { r, c -> this[r][c] }
 }
 

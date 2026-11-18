@@ -7,7 +7,7 @@ import com.adventofcode.util.*
 import kotlin.ranges.ClosedRange
 
 @State(Scope.Thread)
-open class State05(fileName: String = "src/main/resources/input/2025/05.txt") : File(fileName) {}
+open class State05(fileName: String = "src/main/resources/input/aoc2025/05.txt") : File(fileName) {}
 
 open class Day05 {
     fun part1(state: File): Long {

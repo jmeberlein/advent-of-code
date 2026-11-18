@@ -9,7 +9,7 @@ import kotlin.math.min
 import kotlin.math.abs
 
 @State(Scope.Thread)
-open class State09(fileName: String = "src/main/resources/input/2025/09.txt") : File(fileName) {
+open class State09(fileName: String = "src/main/resources/input/aoc2025/09.txt") : File(fileName) {
     val points = List<Vector>(this.size) { i ->
         val tok = this[i].split(",")
         Vector.of(tok[0].toDouble(), tok[1].toDouble())

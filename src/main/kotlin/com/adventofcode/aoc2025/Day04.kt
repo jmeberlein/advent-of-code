@@ -6,7 +6,7 @@ import org.apache.commons.math3.complex.Complex
 import com.adventofcode.util.*
 
 @State(Scope.Thread)
-open class State04(fileName: String = "src/main/resources/input/2025/04.txt") : File(fileName) {
+open class State04(fileName: String = "src/main/resources/input/aoc2025/04.txt") : File(fileName) {
     var grid: Grid<Boolean>
 
     init {

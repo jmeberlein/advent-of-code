@@ -9,7 +9,7 @@ import kotlin.math.min
 import kotlin.math.abs
 
 @State(Scope.Thread)
-open class State11(fileName: String = "src/main/resources/input/2025/11.txt") : File(fileName) {}
+open class State11(fileName: String = "src/main/resources/input/aoc2025/11.txt") : File(fileName) {}
 
 open class Day11 {
     @Benchmark
