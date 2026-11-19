@@ -8,6 +8,11 @@ import kotlin.math.abs
 
 class Vector(val size: Int, init: (Int) -> Double) {
     companion object {
+        val LEFT = Vector.of(0, -1)
+        val RIGHT = Vector.of(0, 1)
+        val UP = Vector.of(-1, 0)
+        val DOWN = Vector.of(1, 0)
+
         fun of(vararg arr: Number): Vector {
             return Vector(arr.size) { i -> arr[i].toDouble() }
         }

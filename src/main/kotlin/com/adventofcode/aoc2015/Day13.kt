@@ -5,7 +5,7 @@ import com.adventofcode.util.*
 import java.util.concurrent.TimeUnit
 
 @State(Scope.Thread)
-open class State13(fileName: String = "src/main/resources/input/2015/13.txt") : File(fileName)
+open class State13(fileName: String = "src/main/resources/input/aoc2015/13.txt") : File(fileName)
 
 open class Day13 {
     @Benchmark

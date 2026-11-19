@@ -7,7 +7,7 @@ import java.math.BigInteger
 import java.util.concurrent.TimeUnit
 
 @State(Scope.Thread)
-open class State04(fileName: String = "src/main/resources/input/2015/04.txt") : File(fileName)
+open class State04(fileName: String = "src/main/resources/input/aoc2015/04.txt") : File(fileName)
 
 open class Day04 {
     @Benchmark

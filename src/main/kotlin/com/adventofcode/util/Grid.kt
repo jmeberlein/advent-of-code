@@ -28,6 +28,16 @@ interface Array2D<T> {
 }
 
 class Grid<T>(override val rows: Int, override val cols: Int = rows, init: (Int, Int) -> T): Array2D<T> {
+    companion object {
+        fun <T> ofRows(vararg rows: Array<T>): Grid<T> {
+            // if (!rows.map { it.size }.allEqual()) {
+            //     throw IllegalArgumentException("Arrays must be the same length")
+            // }
+
+            return Grid<T>(rows.size, rows[0].size) { r, c -> rows[r][c] }
+        }
+    }
+
     val grid = List(rows) { r -> MutableList(cols) { c -> init(r, c) } }
 
     override operator fun get(r: Int, c: Int): T {

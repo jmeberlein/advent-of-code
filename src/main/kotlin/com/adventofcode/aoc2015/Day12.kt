@@ -7,7 +7,7 @@ import kotlinx.serialization.json.*
 // import kotlin.text.toLongOrNull
 
 @State(Scope.Thread)
-open class State12(fileName: String = "src/main/resources/input/2015/12.txt") : File(fileName)
+open class State12(fileName: String = "src/main/resources/input/aoc2015/12.txt") : File(fileName)
 
 open class Day12 {
     @Benchmark

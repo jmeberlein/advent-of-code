@@ -2,6 +2,9 @@ package com.adventofcode.util
 
 class Matrix(override val rows: Int, override val cols: Int = rows, init: (Int, Int) -> Double): Array2D<Double> {
     companion object {
+        val CCW = Matrix.ofCols(Vector.of(0.0, 1.0), Vector.of(-1.0, 0.0))
+        val CW = Matrix.ofCols(Vector.of(0.0, -1.0), Vector.of(1.0, 0.0))
+
         fun identity(n: Int): Matrix {
             return Matrix(n) { r, c -> if (r == c) 1.0 else 0.0 }
         }

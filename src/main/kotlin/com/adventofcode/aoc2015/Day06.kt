@@ -6,7 +6,7 @@ import com.adventofcode.util.Grid
 import java.util.concurrent.TimeUnit
 
 @State(Scope.Thread)
-open class State06(fileName: String = "src/main/resources/input/2015/06.txt") : File(fileName)
+open class State06(fileName: String = "src/main/resources/input/aoc2015/06.txt") : File(fileName)
 
 open class Day06 {
     @Benchmark

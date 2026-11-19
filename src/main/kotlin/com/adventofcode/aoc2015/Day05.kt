@@ -5,7 +5,7 @@ import com.adventofcode.util.File
 import java.util.concurrent.TimeUnit
 
 @State(Scope.Thread)
-open class State05(fileName: String = "src/main/resources/input/2015/05.txt") : File(fileName)
+open class State05(fileName: String = "src/main/resources/input/aoc2015/05.txt") : File(fileName)
 
 open class Day05 {
     @Benchmark
@@ -13,7 +13,7 @@ open class Day05 {
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     fun part1(state: State05): Long {
         // var res = 0L
-        // grep ".*[aeiou].*[aeiou].*[aeiou].*" src/main/resources/input/2015/05.txt | grep -Ev "ab|cd|pq|xy" | grep -E "(.)\1" | wc -l
+        // grep ".*[aeiou].*[aeiou].*[aeiou].*" src/main/resources/input/aoc2015/05.txt | grep -Ev "ab|cd|pq|xy" | grep -E "(.)\1" | wc -l
         return state.count { line -> isNice(line) }.toLong()
     }
 
