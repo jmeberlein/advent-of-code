@@ -30,7 +30,7 @@ open class Day04 {
         var res = 0L
         for (r in 0..<state.grid.rows) {
             for (c in 0..<state.grid.cols) {
-                val p = Vector.of(r.toDouble(), c.toDouble())
+                val p = IntVector.of(r, c)
                 if (state.grid[p] && countAdjacencies(state.grid, p) < 4) {
                     res++
                 }
@@ -47,10 +47,10 @@ open class Day04 {
         var curr: Long
         do {
             curr = 0L
-            var toRemove = ArrayList<Vector>()
+            var toRemove = ArrayList<IntVector>()
             for (r in 0..<state.grid.rows) {
                 for (c in 0..<state.grid.cols) {
-                    val p = Vector.of(r.toDouble(), c.toDouble())
+                    val p = IntVector.of(r, c)
                     if (state.grid[p] && countAdjacencies(state.grid, p) < 4) {
                         toRemove.add(p)
                         curr++
@@ -67,15 +67,15 @@ open class Day04 {
         return res
     }
 
-    fun countAdjacencies(grid: Grid<Boolean>, p: Vector): Int {
-        val ADJACENCIES: Array<Vector> = arrayOf(
-            Vector.of(-1.0, -1.0), Vector.of(-1.0,  0.0), Vector.of(-1.0,  1.0),
-            Vector.of( 0.0, -1.0),                        Vector.of( 0.0,  1.0),
-            Vector.of( 1.0, -1.0), Vector.of( 1.0,  0.0), Vector.of( 1.0,  1.0)
+    fun countAdjacencies(grid: Grid<Boolean>, p: IntVector): Int {
+        val ADJACENCIES: Array<IntVector> = arrayOf(
+            IntVector.of(-1, -1), IntVector.of(-1,  0), IntVector.of(-1,  1),
+            IntVector.of( 0, -1),                       IntVector.of( 0,  1),
+            IntVector.of( 1, -1), IntVector.of( 1,  0), IntVector.of( 1,  1)
         )
 
         var adj = 0
-        for (offset: Vector in ADJACENCIES) {
+        for (offset: IntVector in ADJACENCIES) {
             if (grid.getOrDefault(offset + p, false)) {
                 adj++
             }

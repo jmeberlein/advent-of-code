@@ -13,10 +13,10 @@ open class Day01 {
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     fun part1(state: State01): Long {
         var res = 0L
-        var dir = Vector.UP
-        var pos = Vector.of(0.0, 0.0)
+        var dir = IntVector.UP
+        var pos = IntVector.of(0, 0)
         state[0].split(", ").forEach { line->
-            dir *= if (line[0] == 'R') Matrix.CW else Matrix.CCW
+            dir *= if (line[0] == 'R') IntMatrix.CW else IntMatrix.CCW
             pos += dir * line.substring(1).toInt()
         }
         return pos.magnitude(1.0).toLong()
@@ -27,11 +27,11 @@ open class Day01 {
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     fun part2(state: State01): Long {
         var res = 0L
-        var stops = mutableListOf<Vector>()
-        var dir = Vector.UP
-        var pos = Vector.of(0.0, 0.0)
+        var stops = mutableListOf<IntVector>()
+        var dir = IntVector.UP
+        var pos = IntVector.of(0, 0)
         outer@ for (line in state[0].split(", ")) {
-            dir *= if (line[0] == 'R') Matrix.CW else Matrix.CCW
+            dir *= if (line[0] == 'R') IntMatrix.CW else IntMatrix.CCW
             for (i in 0..<line.substring(1).toInt()) {
                 pos += dir
                 if (pos in stops) {

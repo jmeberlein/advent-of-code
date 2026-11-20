@@ -2,7 +2,7 @@ package com.adventofcode.aoc2025
 
 import org.openjdk.jmh.annotations.*
 import com.adventofcode.util.File
-import com.adventofcode.util.Matrix
+import com.adventofcode.util.IntMatrix
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 import kotlin.math.min
@@ -28,11 +28,11 @@ open class Day11 {
                 }
             }
         }
-        var paths = Matrix(devices.size) { _,_ -> 0.0 }
+        var paths = IntMatrix(devices.size) { _,_ -> 0 }
         for (line in state) {
             var toks = line.split(Regex(":? "))
             for (i in 1..<toks.size) {
-                paths[deviceIDs[toks[0]]!!, deviceIDs[toks[i]]!!] = 1.0
+                paths[deviceIDs[toks[0]]!!, deviceIDs[toks[i]]!!] = 1
             }
         }
         for (k in 0..<devices.size) {
@@ -63,11 +63,11 @@ open class Day11 {
                 }
             }
         }
-        var paths = Matrix(devices.size) { _,_ -> 0.0 }
+        var paths = IntMatrix(devices.size) { _,_ -> 0 }
         for (line in state) {
             var toks = line.split(Regex(":? "))
             for (i in 1..<toks.size) {
-                paths[deviceIDs[toks[0]]!!, deviceIDs[toks[i]]!!] = 1.0
+                paths[deviceIDs[toks[0]]!!, deviceIDs[toks[i]]!!] = 1
             }
         }
         for (k in 0..<devices.size) {

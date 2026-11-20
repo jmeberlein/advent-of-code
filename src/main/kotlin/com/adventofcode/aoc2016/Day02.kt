@@ -60,15 +60,15 @@ open class Day02 {
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     fun part2(state: State02): Long {
         var res = ""
-        var pos = Vector.of(3.0, 0.0)
+        var pos = IntVector.of(3, 0)
         for (line in state) {
             for (c in line) {
                 val newPos = pos + when(c) {
-                    'U' -> Vector.UP
-                    'D' -> Vector.DOWN
-                    'L' -> Vector.LEFT
-                    'R' -> Vector.RIGHT
-                    else -> Vector.UP
+                    'U' -> IntVector.UP
+                    'D' -> IntVector.DOWN
+                    'L' -> IntVector.LEFT
+                    'R' -> IntVector.RIGHT
+                    else -> IntVector.UP
                 }
                 if (newPos[0] >= 0 && newPos[0] < 5 && newPos[1] >= 0 && newPos[1] < 5 && state.keypad02[newPos] != 'X') {
                     pos = newPos

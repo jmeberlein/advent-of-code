@@ -2,6 +2,9 @@ package com.adventofcode.util
 
 class IntMatrix(override val rows: Int, override val cols: Int = rows, init: (Int, Int) -> Int) : Matrix(rows, cols) {
     companion object {
+        val CW = IntMatrix.ofRows(IntVector.of(0, -1), IntVector.of(1, 0))
+        val CCW = IntMatrix.ofRows(IntVector.of(0, 1), IntVector.of(-1, 0))
+
         fun identity(n: Int) = IntMatrix(n) { r, c -> if (r == c) 1 else 0 }
         fun scalar(n: Int, value: Int) = IntMatrix(n) { r, c -> if (r == c) value else 0 }
         fun diagonal(vararg diag: Int) = IntMatrix(diag.size) { r, c -> if (r == c) diag[r] else 0 }
