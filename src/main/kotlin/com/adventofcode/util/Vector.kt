@@ -129,6 +129,20 @@ class IntVector(override val size: Int, init: (Int) -> Int) : Vector(size) {
         return (0..<this.size).sumOf { i -> this[i] * v[i] }
     }
 
+    // Vector-Matrix (row vector × matrix)
+    operator fun times(m: IntMatrix): IntVector {
+        require(size == m.rows) { "Mismatched dimensions" }
+        return IntVector(m.cols) { j -> (0..<m.rows).sumOf { i -> this[i] * m[i, j] } }
+    }
+    operator fun times(m: DoubleMatrix): DoubleVector {
+        require(size == m.rows) { "Mismatched dimensions" }
+        return DoubleVector(m.cols) { j -> (0..<m.rows).sumOf { i -> this[i] * m[i, j] } }
+    }
+    operator fun times(m: LongMatrix): LongVector {
+        require(size == m.rows) { "Mismatched dimensions" }
+        return LongVector(m.cols) { j -> (0..<m.rows).sumOf { i -> this[i] * m[i, j] } }
+    }
+
     // Cross Product (3D only)
     fun crossProduct(v: IntVector): IntVector {
         require(this.size == 3 && v.size == 3) { "Vectors must have 3 elements each" }
@@ -232,6 +246,20 @@ class LongVector(override val size: Int, init: (Int) -> Long) : Vector(size) {
         return (0..<this.size).sumOf { i -> this[i] * v[i] }
     }
 
+    // Vector-Matrix (row vector × matrix)
+    operator fun times(m: IntMatrix): LongVector {
+        require(size == m.rows) { "Mismatched dimensions" }
+        return LongVector(m.cols) { j -> (0..<m.rows).sumOf { i -> this[i] * m[i, j] } }
+    }
+    operator fun times(m: DoubleMatrix): DoubleVector {
+        require(size == m.rows) { "Mismatched dimensions" }
+        return DoubleVector(m.cols) { j -> (0..<m.rows).sumOf { i -> this[i] * m[i, j] } }
+    }
+    operator fun times(m: LongMatrix): LongVector {
+        require(size == m.rows) { "Mismatched dimensions" }
+        return LongVector(m.cols) { j -> (0..<m.rows).sumOf { i -> this[i] * m[i, j] } }
+    }
+
     // Cross Product (3D only)
     fun crossProduct(v: IntVector): LongVector {
         require(this.size == 3 && v.size == 3) { "Vectors must have 3 elements each" }
@@ -333,6 +361,20 @@ class DoubleVector(override val size: Int, init: (Int) -> Double) : Vector(size)
     fun innerProduct(v: LongVector): Double {
         require(this.size == v.size) { "Vectors must be the same size" }
         return (0..<this.size).sumOf { i -> this[i] * v[i] }
+    }
+
+    // Vector-Matrix (row vector × matrix)
+    operator fun times(m: IntMatrix): DoubleVector {
+        require(size == m.rows) { "Mismatched dimensions" }
+        return DoubleVector(m.cols) { j -> (0..<m.rows).sumOf { i -> this[i] * m[i, j] } }
+    }
+    operator fun times(m: DoubleMatrix): DoubleVector {
+        require(size == m.rows) { "Mismatched dimensions" }
+        return DoubleVector(m.cols) { j -> (0..<m.rows).sumOf { i -> this[i] * m[i, j] } }
+    }
+    operator fun times(m: LongMatrix): DoubleVector {
+        require(size == m.rows) { "Mismatched dimensions" }
+        return DoubleVector(m.cols) { j -> (0..<m.rows).sumOf { i -> this[i] * m[i, j] } }
     }
 
     // Cross Product (3D only)

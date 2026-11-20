@@ -1,113 +1,34 @@
 package com.adventofcode.util
 
-class Matrix(override val rows: Int, override val cols: Int = rows, init: (Int, Int) -> Double): Array2D<Double> {
-    companion object {
-        val CCW = Matrix.ofCols(Vector.of(0.0, 1.0), Vector.of(-1.0, 0.0))
-        val CW = Matrix.ofCols(Vector.of(0.0, -1.0), Vector.of(1.0, 0.0))
+abstract class Matrix(open override val rows: Int, open override val cols: Int = rows) : Array2D<Number> {
+    abstract override operator fun get(r: Int, c: Int): Number
+    abstract override operator fun set(r: Int, c: Int, v: Number)
 
-        fun identity(n: Int): Matrix {
-            return Matrix(n) { r, c -> if (r == c) 1.0 else 0.0 }
-        }
-
-        fun scalar(n: Int, value: Double): Matrix {
-            return Matrix(n) { r, c -> if (r == c) value else 0.0 }
-        }
-
-        fun diagonal(vararg diag: Double): Matrix {
-            return Matrix(diag.size) { r, c -> if (r == c) diag[r] else 0.0 }
-        }
-
-        fun ofRows(vararg rows: Vector): Matrix {
-            return Matrix(rows.size, rows[0].size) { r, c -> rows[r][c] }
-        }
-
-        fun ofCols(vararg cols: Vector): Matrix {
-            return Matrix(cols[0].size, cols.size) { r, c -> cols[c][r] }
-        }
-    }
-    
-    val grid = Array<DoubleArray>(rows) { r -> DoubleArray(cols) { c -> init(r, c) } }
-
-    override operator fun get(r: Int, c: Int): Double {
-        return grid[r][c]
-    }
-
-    override operator fun set(r: Int, c: Int, v: Double) {
-        grid[r][c] = v
-    }
-    
     override fun toString(): String {
         val sb = StringBuilder()
-        for (r in 0..<this.rows) {
+        for (r in 0..<rows) {
             sb.append("[ ${this[r, 0]} ")
-            for (c in 1..<this.cols) {
-                sb.append(", ${this[r, c]} ")
-            }
+            for (c in 1..<cols) sb.append(", ${this[r, c]} ")
             sb.append("]")
-            if (r != this.rows - 1) {
-                sb.append("\n")
-            }
+            if (r != rows - 1) sb.append("\n")
         }
         return sb.toString()
     }
 
-    override fun transpose(): Matrix {
-        return Matrix(this.cols, this.rows) { r, c -> this[c, r] }
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Matrix || rows != other.rows || cols != other.cols) return false
+        return (0..<rows).all { r -> (0..<cols).all { c -> this[r, c].toDouble() == other[r, c].toDouble() } }
     }
 
-    operator fun plus(m: Matrix): Matrix {
-        return Matrix(this.rows, this.cols) { r, c -> this[r, c] + m[r, c] }
+    override fun hashCode(): Int {
+        var result = rows * 31 + cols
+        for (r in 0..<rows) for (c in 0..<cols) result = 31 * result + this[r, c].toDouble().hashCode()
+        return result
     }
 
-    operator fun minus(m: Matrix): Matrix {
-        return Matrix(this.rows, this.cols) { r, c -> this[r, c] - m[r, c] }
-    }
-
-    operator fun times(m: Matrix): Matrix {
-        if (this.cols != m.rows) {
-            throw IllegalArgumentException("Mismatched dimensions")
-        }
-
-        return Matrix(this.rows, this.cols) { r, c -> 
-            (0..<this.cols).map { k -> this[r, k] * m[k, c] }.sum()
-        }
-    }
-
-    operator fun times(v: Vector): Vector {
-        if (this.cols != v.size) {
-            throw IllegalArgumentException("Mismatched dimensions")
-        }
-
-        return Vector(this.rows) { r -> 
-            (0..<this.cols).map { k -> this[r, k] * v[k] }.sum()
-        }
-    }
-
-    operator fun plus(x: Number): Matrix {
-        return Matrix(this.rows, this.cols) { r, c -> this[r, c] + x.toDouble() }
-    }
-
-    operator fun minus(x: Number): Matrix {
-        return Matrix(this.rows, this.cols) { r, c -> this[r, c] - x.toDouble() }
-    }
-
-    operator fun times(x: Number): Matrix {
-        return Matrix(this.rows, this.cols) { r, c -> this[r, c] * x.toDouble() }
-    }
-
-    operator fun div(x: Number): Matrix {
-        return Matrix(this.rows, this.cols) { r, c -> this[r, c] / x.toDouble() }
-    }
-
-    operator fun rem(x: Number): Matrix {
-        return Matrix(this.rows, this.cols) { r, c -> this[r, c] % x.toDouble() }
-    }
-
-    fun row(r: Int): Vector {
-        return Vector(this.cols) { c -> this[r, c] }
-    }
-
-    fun col(c: Int): Vector {
-        return Vector(this.rows) { r -> this[r, c] }
-    }
+    abstract override fun transpose(): Matrix
+    abstract fun toIntMatrix(): IntMatrix
+    abstract fun toDoubleMatrix(): DoubleMatrix
+    abstract fun toLongMatrix(): LongMatrix
 }

@@ -12,7 +12,7 @@ if [[ $# -lt 3 || $# -gt 4 ]]; then
     exit 1
 fi
 
-LANG="${1,,}"
+LANG="$(echo "$1" | tr '[:upper:]' '[:lower:]')"
 YEAR="$2"
 DAY=$(printf "%02d" "$((10#$3))")
 INPUT_ARG="${4:-}"
