@@ -61,11 +61,9 @@ open class Day11 {
 
                 for (step in getNextSteps(curr, minFloor)) {
                     val next = curr + step
-                    if (validate(next, minFloor)) {
-                        if (!distances.containsKey(next)) {
-                            distances.put(next, distances.getValue(curr) + 1)
-                            queue.addLast(next)
-                        }
+                    if (!distances.containsKey(next) && validate(next)) {
+                        distances.put(next, distances.getValue(curr) + 1)
+                        queue.addLast(next)
                     }
                 }
             }
@@ -136,11 +134,9 @@ open class Day11 {
 
                 for (step in getNextSteps(curr, minFloor)) {
                     val next = curr + step
-                    if (validate(next, minFloor)) {
-                        if (!distances.containsKey(next)) {
-                            distances.put(next, distances.getValue(curr) + 1)
-                            queue.addLast(next)
-                        }
+                    if (!distances.containsKey(next) && validate(next)) {
+                        distances.put(next, distances.getValue(curr) + 1)
+                        queue.addLast(next)
                     }
                 }
             }
@@ -171,14 +167,7 @@ open class Day11 {
         return true
     }
 
-    fun validate(state: IntMatrix, minFloor: Int): Boolean {
-        if (state[0, 0] < minFloor || state[0, 0] > state[0, 1]) {
-            // Elevator's on an invalid floor
-            return false
-        }
-        if ((0..<state.rows).any { r -> (0..<state.cols).any { c -> state[r, c] < minFloor } }) {
-            return false
-        }
+    fun validate(state: IntMatrix): Boolean {
         for (i in 1..<state.rows) {
             if (state[i, 0] != state[i, 1]) {
                 for (j in 1..<state.rows) {
