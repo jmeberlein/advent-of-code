@@ -16,25 +16,27 @@ open class Day16 {
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     fun part1(state: State16): Long {
         var res = 0L
-        var dragon = state[1].toCharArray().map { it == '1' }.toMutableList()
         var length = state[0].toInt()
-        while (dragon.size < length) {
-            val oldLength = dragon.size
-            dragon.add(false)
-            ((oldLength - 1) downTo 0).forEach { dragon.add(!dragon[it]) }
+        var dragonLength = state[2].length
+        while (dragonLength < length) {
+            dragonLength = 2 * dragonLength + 1
         }
 
-        var checksum = dragon
+        var layers = 0
         while (length % 2 == 0) {
-            val tmp = mutableListOf<Boolean>()
-            for (i in 0..<length step 2) {
-                tmp.add(!(checksum[i] xor checksum[i+1]))
-            }
-            checksum = tmp
+            layers++
             length /= 2
         }
 
-        println(checksum.fold("") { a, b -> a + if (b) '1' else '0'})
+        for (i in 0..<length) {
+            if (getChecksum(state[2], i, dragonLength, layers)) {
+                print('1')
+            } else {
+                print('0')
+            }
+        }
+        println()
+
         return res
     }
 
@@ -43,7 +45,57 @@ open class Day16 {
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     fun part2(state: State16): Long {
         var res = 0L
+        var length = state[1].toInt()
+        var dragonLength = state[2].length
+        while (dragonLength < length) {
+            dragonLength = 2 * dragonLength + 1
+        }
 
+        var layers = 0
+        while (length % 2 == 0) {
+            layers++
+            length /= 2
+        }
+        for (i in 0..<length) {
+            if (getChecksum(state[2], i, dragonLength, layers)) {
+                print('1')
+            } else {
+                print('0')
+            }
+        }
+        println()
         return res
+    }
+
+    fun getChecksum(base: String, pos: Int, dragonLength: Int, layer: Int): Boolean {
+        if (layer == 0) {
+            return getDragon(base, pos, dragonLength)
+        } else {
+            return !(getChecksum(base, pos * 2, dragonLength, layer - 1) xor getChecksum(base, pos * 2 + 1, dragonLength, layer - 1))
+        }
+    }
+
+    fun getDragon(base: String, pos: Int, dragonLength: Int): Boolean {
+        var lt = 0
+        var rt = dragonLength - 1
+        var wentRight = false
+        while (rt - lt >= base.length) {
+            val mid = (rt + lt) / 2
+            if (pos == mid) {
+                return wentRight
+            } else if (pos < mid) {
+                wentRight = false
+                rt = mid - 1
+            } else if (pos > mid) {
+                wentRight = true
+                lt = mid + 1
+            }
+        }
+
+        if (!wentRight) {
+            return base[pos - lt] == '1'
+        } else {
+            return base[rt - pos] == '0'
+        }
     }
 }
