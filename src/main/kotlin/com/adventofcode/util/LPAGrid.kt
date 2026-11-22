@@ -13,7 +13,7 @@ class LPAGrid(
 ) {
     val INFINITY = rows * cols + 1
     val walls = Grid<Boolean>(rows, cols, init)
-    val reported = IntMatrix(rows, cols) { r, c -> INFINITY }
+    val reported = IntMatrix(rows, cols) { _, _ -> INFINITY }
     val expected = IntMatrix(rows, cols) { r, c -> if (r == start[0] && c == start[1]) 0 else INFINITY }
     val heuristic = IntMatrix(rows, cols) { r, c -> if (useHeuristic) (dest - IntVector.of(r, c)).magnitude(1.0).toInt() else 0 }
     val queue = PriorityQueue<IntVector>(compareBy<IntVector> { 

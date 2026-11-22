@@ -47,9 +47,10 @@ open class Day17 {
         queue.addLast(Pair(IntVector.of(0, 0), ""))
         while (queue.size > 0) {
             val (pos, path) = queue.removeLast()
-            if (pos[0] == 3 && pos[1] == 3 && path.length > res) {
-                res = path.length.toLong()
-                println(path.length)
+            if (pos[0] == 3 && pos[1] == 3) {
+                if (path.length > res) {
+                    res = path.length.toLong()
+                }
                 continue
             }
             
@@ -72,9 +73,9 @@ open class Day17 {
         val res = mutableListOf<String>()
         if (pos[0] != 3 || pos[1] != 3) {
             if (md5[0].code > 0x61 && pos[0] > 0) res.add("U")
-            if (md5[1].code > 0x61 && pos[0] < 4) res.add("D")
+            if (md5[1].code > 0x61 && pos[0] < 3) res.add("D")
             if (md5[2].code > 0x61 && pos[1] > 0) res.add("L")
-            if (md5[3].code > 0x61 && pos[1] < 4) res.add("R")
+            if (md5[3].code > 0x61 && pos[1] < 3) res.add("R")
         }
         return res
     }
