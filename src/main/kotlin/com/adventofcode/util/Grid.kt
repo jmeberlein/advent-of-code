@@ -24,6 +24,14 @@ interface Array2D<T> {
         this[vec[0].toInt(), vec[1].toInt()] = v
     }
 
+    fun contains(r: Int, c: Int): Boolean {
+        return r >= 0 && r < rows && c >= 0 && c < cols
+    }
+
+    fun contains(vec: Vector): Boolean {
+        return contains(vec[0].toInt(), vec[1].toInt())
+    }
+
     fun transpose(): Array2D<T>
 }
 

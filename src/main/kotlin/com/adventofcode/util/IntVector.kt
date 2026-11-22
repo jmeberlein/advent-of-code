@@ -119,4 +119,15 @@ class IntVector(override val size: Int, init: (Int) -> Int) : Vector(size) {
             this[0] * v[1] - this[1] * v[0]
         )
     }
+
+    fun remainder(moduli: IntVector): Int {
+        require(this.size == moduli.size) { "Vectors must be the same size" }
+
+        val product = (0..<size).fold(1) { a, b -> a * moduli[b] }
+        val partialProducts = IntVector(size) { i -> product / moduli[i] }
+        val modInverses = IntVector(size) { i -> 
+            partialProducts[i].toBigInteger().modInverse(moduli[i].toBigInteger()).toInt() 
+        }
+        return (0..<size).sumOf { this[it] * modInverses[it] * partialProducts[it] } % product
+    }
 }
